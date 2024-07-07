@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title></title>
+    <link rel="icon" href="data:image/png;base64,">
+    <style>
+        *,
+        :before,
+        :after {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pixes-per-cm: 0;
+        }
+
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .square {
+            width: clamp(1px, calc(3 * var(--pixes-per-cm)), 100%);
+            height: clamp(calc(3 * var(--pixes-per-cm)), 100%);
+            background: red;
+        }
+
+        input {
+            width: 3cm;
+            margin-top: 20px;
+        }
+
+        .panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <p>Разрешение: <b class="resolution"></b></p>
+        <p>Физические размеры: <b class="sizes"></b></p>
+        <p>Пикселей/см: <b class="pxs-per-cm"></b></p>
+    </div>
+    <div class="square"></div>
+    <input type="text" value="">
+    <script>
+        function setValue(selector, value) {
+            if (document.querySelector(selector)) {
+                document.querySelector(selector).textContent = value
+            }
+        }
+
+        function render() {
+            const value = document.querySelector('input')?.value
+            const d = (Number(value) || 0) * 2.54
+            const { width, height } = screen
+            const sidesRatio = width / height
+            const physicalWidth = Math.sqrt(d ** 2 / (1 + sidesRatio ** 2)) * sidesRatio
+            const physicalHeight = Math.sqrt(d ** 2 / (1 + sidesRatio ** 2))
+            const pixelsPerCm = height / physicalHeight
+
+            document.body.style.setProperty('--pixes-per-cm', `${pixelsPerCm}px`)
+            setValue('.resolution', `${screen.width}x${screen.height}`)
+            setValue('.sizes', `${physicalWidth.toFixed(2)} см x ${physicalHeight.toFixed(2)} см`)
+            setValue('.pxs-per-cm', pixelsPerCm.toFixed(2))
+        }
+
+        setInterval(render, 200)
+    </script>
+</body>
+</html>

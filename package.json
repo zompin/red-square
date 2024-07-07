@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "server:simple": "npx node-static simple -a 0.0.0.0",
+    "server:d": "npx node-static d -a 0.0.0.0"
+  },
+  "dependencies": {
+    "node-static": "^0.7.11"
+  }
+}
